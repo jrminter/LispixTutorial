@@ -171,7 +171,7 @@ you cycle through more elaborate menus. I find the second level menu,
 
 \section{Exploring a spectral datacube}
 
-Dale Newbury notes that one may thinkl of a spectral datacube like a
+Dale Newbury notes that one may think of a spectral datacube like a
 deck of cards. The image on each card corresponds to an X-ray map at a
 single X-ray energy. In our case we will explore an X-ray map of a Pd 
 cluster embedded in Cu computed by Monte Carlo simulation. The Pd
@@ -275,13 +275,33 @@ Note that one could select \textbf{``Make Elemental Image Cube''} from the
 \textbf{X-ray Spectra} menu, but it picks the missing CuK-$\alpha$ line
 in this case\ldots Grrr\ldots
 
+\subsection{Converting a floating point cube to an integer}
+
+My \textbf{rEDS} code seems to have problems with floating point (real
+number) data cubes (produced by default by DTSA.) For now, I
+convert them to integers. This cuts the file size in half.
+
+\begin{enumerate}
+  \item Open the floating point cube as an \emph{F-cube}. From the
+  \textbf{File} menu open the `.raw' file in Lispix.
+  
+  \item Choose 10 slices at a time.
+  
+  \item Choose \textbf{DataCube -> Cube -> Scale to Integer 16 bit}
+  to scale the cube.
+  
+  \item From the \textbf{File} menu choose \emph{Save Image or Cube
+  as raw}. Pick a file name and save the file. 
+
+\end{enumerate}
+
 
 \subsection{Extracting raw X-ray images}
 
 Click on the window with the Maximum Spectra and select ``Region''
 from the ``Slider'' menu in the \textbf{Data Cube} tool bar. You
 will see a  slider bar with a magenta window. Right click on the
-slider bar and select ``Type to match slider postion'' and enter
+slider bar and select ``Type to match slider position'' and enter
 the values 271 and 295. Note how this matches the center region of
 the CuL peak. You could have dragged the edges of the magenta region
 on the slider bar to select a region.
