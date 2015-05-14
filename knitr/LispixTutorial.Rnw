@@ -1,0 +1,349 @@
+% =========================== LispixTutorial.Rnw =======================
+% 3456789012345678901234567890123456789012345678901234567890123456789012
+\documentclass[12pt]{article}
+
+\input{./inc/tex/xelatex-cfg}
+
+% \usepackage{caption}
+
+%% general metadata:
+\newcommand{\theAuthor}{John Minter}
+\newcommand{\theContributors}{TBD}
+\newcommand{\theTitle}{Lispix Tutorial} 
+\newcommand{\theSubject}{Lispix} 
+\newcommand{\theKeywords}{Lispix, Data Cube}
+\newcommand{\theDate}{DRAFT: \today}
+
+
+% automatic hyperlinks in document
+
+\hypersetup
+{
+colorlinks=true,
+linkcolor=NavyBlue,
+citecolor=NavyBlue,
+urlcolor=NavyBlue,
+bookmarksnumbered=true,
+bookmarksopen=false,
+bookmarksopenlevel=1,
+pdfpagemode={UseOutlines},
+pdfpagelayout={SinglePage},
+pdfview=Fit,
+pdfstartview=Fit,
+pdfauthor={\theAuthor},
+pdfsubject={\theSubject},
+pdftitle={\theTitle},
+pdfkeywords={\theKeywords}
+}
+%
+
+\begin{document}
+%\VignetteEngine{knitr::knitr}
+
+<<setup, include=FALSE, cache=FALSE>>=
+rm(list=ls())
+# make sure needed packages & functions are loaded
+library(knitr)
+library(xtable)
+# set global chunk options
+opts_chunk$set(fig.path='figure/knitr-', fig.align='center', fig.show='hold')
+options(formatR.arrow=TRUE,width=90)
+
+options(digits=4, width=65, continue=" ")
+
+# set as needed
+gitDir <- Sys.getenv("GIT_HOME")
+relDir <- "/LispixTutorial/knitr"
+str.wd <- paste0(gitDir, relDir)
+Sys.setenv(TEXINPUTS=str.wd)
+Sys.setenv(BIBINPUTS=str.wd)
+Sys.setenv(BSTINPUTS=str.wd)
+@
+
+
+%% this is a very simple title w/o make title
+
+%% a logo at the upper right corner
+\includegraphics[width=2in]
+{./inc/pdf/kodak-analytical-sciences.pdf} \\
+
+\begin{center}
+\large{\textbf{\textcolor{ekRed}{\theTitle}}}
+\end{center}
+
+% \vspace{0.125in}
+
+\large{
+\begin{tabular}{r l}
+\textbf{Organization:} & Kodak Technology Center \\
+\textbf{Division:}     & Analytical Sciences \\
+\textbf{Laboratory:}   & Microscopy \& Spectroscopy \\
+\textbf{Author:}       & \theAuthor  \\
+\textbf{Date:}         & \theDate \\
+\end{tabular}
+}
+
+
+\begin{abstract}
+
+\proglang{Lispix} is a public domain image analysis program for Windows,
+written and maintained by David Bright of NIST\footnote{See
+http://www.nist.gov/lispix/}. I found menu structure confusing and wrote
+this introduction to refresh my memory when needed.
+
+Note the the reader: If you are reading a PDF, most other
+\textcolor{NavyBlue}{light blue} text
+entries are hyperlinks to aid navigation.
+
+\end{abstract}
+
+\pagenumbering{arabic}
+\thispagestyle{empty}
+
+
+% copyright at bottom of first page
+\begin{figure*}[b]
+\noindent
+\hrulefill \\
+\input{./inc/tex/copyright.tex}
+\end{figure*}
+
+\raggedbottom
+
+\newpage
+
+{
+\setlength{\parskip}{0pt}
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+% \listoffigures
+
+% \listoftables
+}
+
+\newpage
+
+
+\section{Introduction}
+
+\proglang{Lispix} is a public domain image analysis program for Windows,
+written and maintained by David Bright of NIST. The most recent
+publication is by Newbury \emph{et al.}\cite{Newbury2007a}.
+
+I found menu structure confusing and wrote this introduction to refresh
+my memory when needed.
+
+
+\section{Starting Lispix}
+
+First, we need to start Lispix and get it set up for work. When you
+start Lispix, you will get some start-up messages. You are then
+presented with a menu that looks like this.
+
+\vskip 12pt
+
+% do not use a floating environment if you do not want it float...
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[keepaspectratio=true,scale=.9]
+  {./inc/png/lispix-e1-menu.png}}
+\end{minipage}
+
+\vskip 12pt
+
+Note that pressing the ``E1'' button at the right of the menu bar lets
+you cycle through more elaborate menus. I find the second level menu,
+``E2'' has most of the functions I use.
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[keepaspectratio=true,scale=.9]
+  {./inc/png/lispix-e2-menu.png}}
+\end{minipage}
+
+\vskip 12pt
+
+
+\section{Exploring a spectral datacube}
+
+Dale Newbury notes that one may thinkl of a spectral datacube like a
+deck of cards. The image on each card corresponds to an X-ray map at a
+single X-ray energy. In our case we will explore an X-ray map of a Pd 
+cluster embedded in Cu computed by Monte Carlo simulation. The Pd
+particle was in the center and the map was computed for 64~$\times$~64
+locations. Each location has 2048 X-ray energies.
+
+\subsection{Loading the data}
+
+From the \textbf{File} menu select \textbf{Open}. Choose the file
+``Pd-0.20-um-in-Cu-7-kV.raw''. You will be presented with three
+dialog boxes. Choose \textbf{In memory} from the first, \textbf{Don't
+change} for the number of channels, and \textbf{No clipping}. Lispix
+will load the cube.
+
+You will note the image is small and it is hard to see the names in the
+window. Click on the window with the data cube and then click on the
+\textbf{Zoom} menu and select \textbf{4}. Note how the titles are
+more visible.
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=2in]
+  {./inc/png/cube-zoomed.png}}
+\end{minipage}
+
+\vskip 12pt
+
+Use the slider to view the different slices (X-ray energies) in the
+data cube. See if you can identify the slices that contain the CuL
+and PdL X-rays.
+
+
+\subsection{Exploring the cube}
+
+Lispix offers some powerful tools for exploring a data cube.
+
+First open the \textbf{Data Cube} tool bar by selecting ``Data Cube''
+from the \textbf{Tools} menu.
+
+Click on the window with the data cube and then select ``Max Spect
+for Whole Cube'' from the \textbf{Plot} menu in the \textbf{Data
+Cube} tool bar. Note that you get what looks like an EDS spectra
+without a calibrated energy scale. Lispix can calibrate the energy
+scale and display peak markers. One need only add two lines to
+the `.rpl' file. Note that the values below are separated by their
+descriptor using a tab character.
+
+\begin{verbatim}
+ev-per-chan  5.0
+detector-peak-width-ev	128
+\end{verbatim}
+
+Note that I have truncated the
+data to the first 1000 slices in the figure below.
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=5in]
+  {./inc/png/max-spect-whole-cube.png}}
+\end{minipage}
+
+\vskip 12pt
+
+To get Lispix to calibrate the energy scale, one opens the \textbf{Periodic
+Table} toolbar from the \textbf{Tools} menu to obtain the view below:
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=3in]
+  {./inc/png/periodoc-table-menu.png}}
+\end{minipage}
+
+\vskip 12pt
+
+If one clicks on our ``Max Spectrum Plot'' and selects the \textbf{Cu}
+and \textbf{Pd} elements as shown above then \textbf{``Mark Selected
+Elements''} from the \textbf{X-ray Spectra} menu on the \textbf{Periodic
+Table} toolbar, one gets the view below: 
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=5in]
+  {./inc/png/max-spec-whole-cube-el-marked.png}}
+\end{minipage}
+
+\vskip 12pt
+
+Note that one could select \textbf{``Make Elemental Image Cube''} from the
+\textbf{X-ray Spectra} menu, but it picks the missing CuK-$\alpha$ line
+in this case\ldots Grrr\ldots
+
+
+\subsection{Extracting raw X-ray images}
+
+Click on the window with the Maximum Spectra and select ``Region''
+from the ``Slider'' menu in the \textbf{Data Cube} tool bar. You
+will see a  slider bar with a magenta window. Right click on the
+slider bar and select ``Type to match slider postion'' and enter
+the values 271 and 295. Note how this matches the center region of
+the CuL peak. You could have dragged the edges of the magenta region
+on the slider bar to select a region.
+
+Click on the \textbf{Image} menu on the \textbf{Data Cube} tool bar
+and select ``Sum image within Region''. Click on the resulting window
+and select \textbf{Zoom / 4} from the ``E2'' main menu bar. Now
+select \textbf{Change Name} from the ``E2'' main menu bar and rename
+this image to ``Cu-L-s271-295'' (more descriptive.)
+
+Click on the window with the Maximum Spectra plot. Click on the center
+of the magenta region and drag it to be centered on the main peak in
+the PdL X-ray family (653-676). Click on the \textbf{Image} menu on
+the \textbf{Data Cube} tool bar and select ``Sum image within Region''.
+Click on the resulting window
+and select \textbf{Zoom / 4} from the ``E2'' main menu bar. Now
+select \textbf{Change Name} from the ``E2'' main menu bar and rename
+this image to ``Pd-L-653-676'' (more descriptive.)
+
+You should have a pair of images that look like this:
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=5in]
+  {./inc/png/raw-X-ray-images.png}}
+\end{minipage}
+
+
+\subsection{Preparing an overlay images}
+
+From the \textbf{Tools} sub-menu on the maintoolbar, select
+\textbf{2 \& 3 variables}.
+
+Click to select the ``CuL'' image and click the \textbf{Red/X} button
+on the \textbf{2 \& 3 variables} toolbar. Click to select the ``PdL''
+image and click the \textbf{Blue/Z} button on the \textbf{2 \& 3
+variables} toolbar. Select ``Make RGB Overlay''From the \textbf{RGB
+Overlay} menu on the \textbf{2 \& 3 variables} toolbar.  Now
+select \textbf{Change Name} from the ``E2'' main menu bar and rename
+this image to ``CuL-R-PdL-B-overlay'' (more descriptive.)
+
+Note we chose Red and Blue because a significant number of people
+are Red/Green colorblind\ldots
+
+You should have an overlay that look like this:
+
+\vskip 12pt
+
+\noindent%
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{%        to center the image
+  \includegraphics[width=2in]
+  {./inc/png/CuL-R-PdL-B-overlay.png}}
+\end{minipage}
+
+\vskip 12pt
+
+% For bibtex...
+\bibliographystyle{IEEEtran}  % (uses file "IEEEtran.bst")
+\bibliography{./inc/theBib}
+
+\end{document}
